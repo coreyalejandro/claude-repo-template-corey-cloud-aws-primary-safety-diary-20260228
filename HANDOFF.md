@@ -1,10 +1,12 @@
 # 🚀 Agent Handoff: Claude Repo OS (AWS-Primary Safety Diary)
 
-**Date:** 2026-03-01
+**Date:** 2026-03-02
 **Status:** In Progress
 
 ## 📋 What Was Just Completed
 
+- Rewrote `README.md` in plain language for broad readability (clear purpose, quick start, plain repo map, explicit "safe to run" framing).
+- Created standalone GitHub repository for this project: `https://github.com/coreyalejandro/claude-repo-template-corey-cloud-aws-primary-safety-diary-20260228`.
 - Initial `HANDOFF.md` created for session continuity.
 - Fixed script execution permissions for `scripts/*.sh` so direct `./scripts/*.sh` invocation works.
 - Fixed verification behavior in `scripts/verify.sh` to fail fast per step (`|| return 1`) and removed duplicate build command.
@@ -64,8 +66,8 @@
 
 ### Git Workflow
 
-- Branch: `master`
-- Remote: `https://github.com/coreyalejandro/COL-REASONS-ASF-2026.git`
+- Branch: `main` (standalone repo)
+- Remote: `https://github.com/coreyalejandro/claude-repo-template-corey-cloud-aws-primary-safety-diary-20260228.git`
 - Follow small, atomic changes with explicit verification output.
 
 ## ⚠️ Known Issues / Considerations
@@ -77,10 +79,10 @@
 ## 📞 Quick Reference
 
 - **Project:** Claude Repo OS (AWS-Primary Safety Diary)
-- **Repository:** `coreyalejandro/COL-REASONS-ASF-2026`
-- **Remote:** `https://github.com/coreyalejandro/COL-REASONS-ASF-2026.git`
-- **Branch:** `master`
-- **Last Commit:** `f7b553d4ae6372849c44e0f8e8ec2ca7afe2bee5`
+- **Repository:** `coreyalejandro/claude-repo-template-corey-cloud-aws-primary-safety-diary-20260228`
+- **Remote:** `https://github.com/coreyalejandro/claude-repo-template-corey-cloud-aws-primary-safety-diary-20260228.git`
+- **Branch:** `main`
+- **Last Commit:** `d08e03aa57277ed62385921bbc49a32a93011f1f`
 
 ---
 

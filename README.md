@@ -1,39 +1,32 @@
-# Claude Repo OS — AWS-Primary, Safety-First, Future-Proofed
+# Claude Repo Template (Plain-English Guide)
 
-## Introduction
+## What this repo is
 
-This repository is an **operational system for agent-assisted engineering**: not a prompt, not a vibe, not a “best practices” blog post.  
-It is a _production-ready structure_ where correctness is earned through **verification**, **policy enforcement**, **supply-chain integrity**, and **audit trails**.
+This repo is a starter project you can:
 
-### My role in creating this repo
+- run locally
+- test automatically
+- package as a Docker image
+- deploy to Kubernetes
+- wire to cloud infrastructure (AWS first, plus GCP and Azure templates)
 
-I (ChatGPT, GPT-5.2 Thinking) acted as the **implementation partner**: translating the intent (“no mocks, no empty scaffolds—real working repo”) into an executable repository with:
+If you are wondering "am I supposed to run this or just read it?" — run it.
 
-- deterministic verification scripts
-- CI gating
-- security + SBOM workflows
-- containerization
-- Kubernetes deployment (manifests + Helm)
-- Terraform stacks for AWS/GCP/Azure
-- AWS EKS as the **primary** target
-- safety-first guardrails (policy-as-code + signing/attestation)
+## What this repo is not
 
-I enforced a fail-closed posture: if something cannot be verified, it is treated as **not shipped**.
+- It is not malware.
+- It is not a destructive script pack.
+- It does not include real cloud secrets.
+- It is not trying to be clever language-wise.
 
----
+## My role
 
-## What you get
+I (ChatGPT) helped implement and organize this repository from your requirements.
+The goal was practical: make a repo that a person can run, verify, and deploy.
 
-### 1) A real deployable service (not a stub)
+## Fast start (3 commands)
 
-- HTTP service with `/healthz` and `/readyz`
-- tests verifying endpoints
-- TypeScript build output to `dist/`
-- production container via `Dockerfile`
-
-### 2) Deterministic verification you can trust
-
-Run:
+From the repo root:
 
 ```bash
 ./scripts/doctor.sh
@@ -41,53 +34,11 @@ npm ci
 ./scripts/verify.sh
 ```
 
-Expected: **Verify complete** (build + format + lint + typecheck + tests).
+If all is well, you should see `Verify complete`.
 
-### 3) Security and supply-chain integrity
+## What you can run next
 
-Run:
-
-```bash
-./scripts/security.sh
-./scripts/sbom.sh
-```
-
-CI also includes:
-
-- secret scanning
-- vuln scanning
-- SAST
-- SBOM generation
-- image signing + attestation (see `.github/workflows/provenance.yml`)
-
-### 4) Cloud deployments — AWS is primary
-
-- Kubernetes manifests: `k8s/base/`
-- Helm chart: `helm/claude-template/`
-- Terraform:
-  - AWS EKS: `infra/terraform/aws/` (**primary**)
-  - GCP GKE: `infra/terraform/gcp/`
-  - Azure AKS: `infra/terraform/azure/`
-
-### 5) Identity wiring in one dedicated place
-
-Cloud identity and credentials templates live here:
-
-- `infra/identity/`
-
----
-
-## One correct path: Local → Container → Kubernetes → Cloud
-
-### Step 1 — Local proof
-
-```bash
-./scripts/doctor.sh
-npm ci
-./scripts/verify.sh
-```
-
-### Step 2 — Container proof
+### Run with Docker
 
 ```bash
 docker build -t claude-template:local .
@@ -96,7 +47,7 @@ curl http://localhost:3000/healthz
 curl http://localhost:3000/readyz
 ```
 
-### Step 3 — Kubernetes proof (any cluster)
+### Deploy to Kubernetes (any cluster)
 
 ```bash
 kubectl apply -f k8s/base/namespace.yaml
@@ -104,7 +55,7 @@ kubectl apply -n claude-template -f k8s/base/
 kubectl -n claude-template get pods
 ```
 
-### Step 4 — AWS EKS (primary) provision
+### Provision AWS EKS (primary cloud path)
 
 ```bash
 cd infra/terraform/aws
@@ -112,37 +63,40 @@ terraform init
 terraform apply
 ```
 
-### Step 5 — AWS EKS deploy via Helm
+### Deploy to EKS with Helm
 
 ```bash
 aws eks update-kubeconfig --region "<AWS_REGION>" --name "<EKS_CLUSTER_NAME>"
-helm upgrade --install claude-template ./helm/claude-template   --namespace claude-template --create-namespace   --set image.repository="ghcr.io/<GITHUB_OWNER>/<GITHUB_REPO>"   --set image.tag="latest"
+helm upgrade --install claude-template ./helm/claude-template \
+  --namespace claude-template --create-namespace \
+  --set image.repository="ghcr.io/<GITHUB_OWNER>/<GITHUB_REPO>" \
+  --set image.tag="latest"
 kubectl -n claude-template rollout status deploy/claude-template --timeout=180s
 ```
 
----
+## Repo map (human version)
 
-## Where the “hard rules” live
+- App code: `src/`
+- Tests: `tests/`
+- Scripts you run: `scripts/`
+- Kubernetes files: `k8s/`
+- Helm chart: `helm/claude-template/`
+- Terraform (AWS/GCP/Azure): `infra/terraform/`
+- Cloud identity templates: `infra/identity/`
+- Build diary: `docs/appendix/build-diary.md`
 
-- Repo north star: `CLAUDE.md`
-- Scoped constraints: `.claude/rules/`
-- Repeatable workflows: `.claude/skills/`
-- Deterministic enforcement: `.claude/hooks/` + `scripts/`
-- Sensitive module guardrails: `modules/*/CLAUDE.md`
-- Auditability: `docs/runbooks/auditability.md`
-- Safety-first controls: `docs/runbooks/ai-safety-first.md`
-- Identity wiring: `infra/identity/`
+## Cloud identity templates
 
----
+Identity wiring files are in `infra/identity/`:
 
-## Appendix
+- AWS OIDC + trust policy templates
+- GCP workload identity instructions
+- Azure federated credential template
 
-- Build diary (metacognitive notes): `docs/appendix/build-diary.md`
-
----
+These files use placeholders. You must fill in your own account/project values.
 
 ## Acknowledgements
 
-- Original pattern inspiration: the broader “repo-as-memory” approach popularized by Claude Code practitioners.
-- Claude Code documentation and conventions helped inform folder semantics and workflow expectations.
-- Built and assembled by **ChatGPT (GPT-5.2 Thinking)** as an implementation partner responding to a user-defined deterministic build intent.
+- Thanks to the open tooling ecosystem (Node, Kubernetes, Terraform, GitHub Actions).
+- Thanks to Claude Code conventions for folder/workflow inspiration.
+- Built with your direction, then implemented and refined with AI assistance.
