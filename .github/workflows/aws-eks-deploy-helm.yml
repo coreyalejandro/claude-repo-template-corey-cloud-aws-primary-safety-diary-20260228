@@ -1,0 +1,52 @@
+name: AWS EKS Deploy (Helm)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'Container image to deploy (e.g., ghcr.io/OWNER/REPO:sha-...)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.29.0'
+
+      - name: Setup helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'v3.15.0'
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region "${{ secrets.AWS_REGION }}" --name "${{ secrets.EKS_CLUSTER_NAME }}"
+          kubectl get nodes
+
+      - name: Deploy helm chart
+        run: |
+          # Extract repo and tag from full image ref
+          IMAGE="${{ inputs.image }}"
+          REPO="${IMAGE%:*}"
+          TAG="${IMAGE##*:}"
+          helm upgrade --install claude-template ./helm/claude-template             --namespace claude-template --create-namespace             --set image.repository="$REPO"             --set image.tag="$TAG"
+
+      - name: Rollout status
+        run: |
+          kubectl -n claude-template rollout status deploy/claude-template --timeout=180s

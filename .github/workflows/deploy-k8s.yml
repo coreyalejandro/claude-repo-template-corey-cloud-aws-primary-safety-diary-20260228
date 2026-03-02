@@ -1,0 +1,39 @@
+name: Deploy (Kubernetes)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'Container image to deploy'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image
+        run: |
+          sed -i "s|image: .*|image: ${{ inputs.image }}|g" k8s/base/deployment.yaml
+
+      - name: Configure kubectl
+        env:
+          KUBECONFIG_B64: ${{ secrets.KUBECONFIG_B64 }}
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBECONFIG_B64" | base64 -d > ~/.kube/config
+          kubectl version --client
+
+      - name: Apply manifests
+        run: |
+          kubectl apply -f k8s/base/namespace.yaml
+          kubectl apply -n claude-template -f k8s/base/
+
+      - name: Rollout status
+        run: |
+          kubectl -n claude-template rollout status deploy/claude-template --timeout=180s

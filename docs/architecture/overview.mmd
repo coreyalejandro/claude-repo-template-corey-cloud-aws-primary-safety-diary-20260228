@@ -1,0 +1,14 @@
+```mermaid
+flowchart TB
+  A[Root CLAUDE.md<br/>Repo north star] --> B[.claude/rules<br/>Scoped constraints]
+  A --> C[.claude/skills<br/>Reusable workflows]
+  A --> D[.claude/hooks<br/>Hard guarantees]
+  A --> E[.claude/subagents<br/>Specialist roles]
+  A --> F[docs/<br/>Deep context]
+  A --> G[checklists/<br/>Definition of Done]
+  A --> H[modules/*<br/>Local CLAUDE.md for sensitive areas]
+
+  D --> I[scripts/verify.sh<br/>Deterministic checks]
+  G --> I
+  H --> I
+```

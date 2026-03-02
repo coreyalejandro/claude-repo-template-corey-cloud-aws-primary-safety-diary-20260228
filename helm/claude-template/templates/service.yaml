@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: { { include "claude-template.fullname" . } }
+  namespace: claude-template
+spec:
+  type: { { .Values.service.type } }
+  selector:
+    app.kubernetes.io/name: { { include "claude-template.name" . } }
+  ports:
+    - name: http
+      port: { { .Values.service.port } }
+      targetPort: { { .Values.service.targetPort } }

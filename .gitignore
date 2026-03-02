@@ -1,0 +1,35 @@
+# local-only
+CLAUDE.local.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+.pnpm-store/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Build
+dist/
+build/
+.next/
+out/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OpenMemory - IDE/Assistant specific rules
+.cursor/rules/openmemory.mdc
+CLAUDE.md

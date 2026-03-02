@@ -1,0 +1,8 @@
+# Example ownership mapping
+* @repo-owners
+
+/.claude/ @repo-owners
+/docs/ @repo-owners
+/modules/auth/ @security-owners
+/modules/billing/ @security-owners
+/modules/data/ @data-owners
